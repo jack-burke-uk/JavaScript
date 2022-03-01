@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Polaroid Video</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #5197ff;
+            font-size: 0;
+        }
+
+        #controls {
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
+
+        #videoInput {
+            min-height: 300px;
+            min-width: 300px;
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 20px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <p>
+            <button id="btnUseCamera" title="Use your Camera" style="font-size:1.5rem;">📷</button>
+            <button id="btnUseFile" title="Select a file" style="font-size:1.5rem;">📂</button>
+            <input id="videoInput" type="file" hidden />
+        </p>
+    </div>
+    <script src="PolaroidVideo.js"></script>
+    <script>
+        document.getElementById("btnUseFile").addEventListener("click", function () { document.getElementById("videoInput").click() })
+
+        document.getElementById("videoInput").addEventListener("change", function (ev) {
+            // We should hide the file input
+            var controls = document.getElementById("controls");
+            controls.hidden = true;
+
+            var reader = new FileReader();
+            reader.readAsDataURL(ev.target.files[0]);
+            reader.onload = function (e) {
+                console.log("File loaded. Creating video.")
+                var videoUrl = reader.result;
+                var videoObject = document.createElement("video");
+                videoObject.src = videoUrl;
+                var canplay = function () {
+                    videoObject.removeEventListener("canplay", canplay);
+                    console.log("Video ready to play.")
+                    PolaroidVideo.fromVideo(videoObject);
+                }
+                videoObject.addEventListener("canplay", canplay)
+            }
+        });
+
+        // For non-touchscreen users
+        document.addEventListener("keyup", function (e) {
+            switch (e.code) {
+                case "Space":
+                    if (e.shiftKey)
+                        PolaroidVideo.togglePlay();
+                    else
+                        PolaroidVideo.setDirection("none");
+                    break;
+                case "ArrowUp":
+                    PolaroidVideo.setDirection("up")
+                    break;
+                case "ArrowDown":
+                    PolaroidVideo.setDirection("down")
+                    break;
+                case "ArrowLeft":
+                    PolaroidVideo.setDirection("left")
+                    break;
+                case "ArrowRight":
+                    PolaroidVideo.setDirection("right")
+                    break;
+            }
+        });
+
+        // For touchscreen devices
+        PolaroidVideo.canvasClickEvent = function (e) {
+            var touch = e.touches[0];
+            var direction = "none";
+            if (touch.clientY < window.innerHeight / 3) {
+                direction = "up";
+            }
+            else if (touch.clientY > window.innerHeight * 0.66) {
+                direction = "down";
+            }
+            else {
+                if (touch.clientX < window.innerWidth / 3)
+                    direction = "left";
+                else if (touch.clientX > window.innerWidth * 0.66)
+                    direction = "right";
+            }
+            console.log("touchstart. Direction = " + direction);
+            PolaroidVideo.setDirection(direction);
+        }
+
+        // Run the video from a live camera stream
+        document.getElementById("btnUseCamera").addEventListener("click", function () {
+            navigator.mediaDevices.getUserMedia(
+                {
+                    video: { width: 640, height: 420 },
+                    audio: false
+                })
+                .catch(function (e) {
+                    alert(e.message);
+                })
+                .then(function (stream) {
+                    var controls = document.getElementById("controls");
+                    controls.hidden = true;
+                    var video = document.createElement("video");
+                    video.srcObject = stream;
+                    var canPlay = function () {
+                        video.removeEventListener("canplay", canPlay);
+                        console.log("Camera video can play")
+                        PolaroidVideo.fromVideo(video);
+                    }
+                    video.addEventListener("canplay", canPlay);
+                })
+        });
+
+        // Allow people to drag files onto the page
+        document.addEventListener("drop", function (ev) {
+            ev.preventDefault();
+            if (ev.dataTransfer.files.length > 0) {
+                // We should hide the file input
+                var controls = document.getElementById("controls");
+                controls.hidden = true;
+
+                var file = ev.dataTransfer.files[0];
+
+                console.log("File selected. Loading...")
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function (e) {
+                    console.log("File loaded. Creating video.")
+                    var videoUrl = reader.result;
+                    var videoObject = document.createElement("video");
+                    videoObject.src = videoUrl;
+                    var canplay = function () {
+                        videoObject.removeEventListener("canplay", canplay);
+                        console.log("Video ready to play.")
+                        PolaroidVideo.fromVideo(videoObject);
+                    }
+                    videoObject.addEventListener("canplay", canplay)
+
+                }
+            }
+        });
+        document.addEventListener("dragover", function (e) {
+            e.preventDefault();
+        })
+
+    </script>
+</body>
+</html>
