@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Dial Stats</title>
+    <style>
+        canvas{
+            display:inline-block;
+            vertical-align:bottom;
+        }
+    </style>
+</head>
+<body>
+    <div class="dial-stat-container one" id="container-one"></div>
+    <div class="dial-stat-container two" id="container-two"></div>
+
+    <script src="DialStat.js"></script>
+    <script>
+        var stats = [
+            {
+                currentValue: 5,
+                totalValue: 10
+            },
+            {
+                currentValue: 10,
+                totalValue: 20,
+                currentColor: "#f58026",
+                strokeWidth: 5
+            },
+            {
+                currentValue: 50,
+                totalValue: 100,
+                currentColor: "#cc5cff",
+                strokeWidth: 20
+            }
+        ];
+
+        for(var i = 0; i < stats.length; i++){
+            stats[i].component = new DialStat(stats[i]);
+            stats[i].component.appendTo("body");
+        }
+
+        setInterval(function(){
+            for(var i = 0; i < stats.length; i++){
+                if(!stats[i].hasOwnProperty("component"))
+                    continue;
+
+                stats[i].currentValue += (Math.random() > 0.5 ? 1 : -1);
+                if(stats[i].currentValue < 0)
+                    stats[i].currentValue = 0;
+                else if(stats[i].currentValue > stats[i].totalValue)
+                    stats[i].currentValue = stats[i].totalValue;
+
+                stats[i].component.updateCurrent(stats[i].currentValue);
+            }
+        }, 1000);
+
+    </script>
+</body>
+</html>
