@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Dutone Images</title>
+    <style>
+        html {
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            box-sizing: border-box;
+            font-family:sans-serif;
+        }
+
+        .disco{
+            animation: disco 1s linear infinite;
+        }
+
+        @keyframes disco{
+            0%{
+                background-color:red;
+            }
+            33% {
+                background-color: green;
+            }
+            66% {
+                background-color: blue;
+            }
+            100%{
+                background-color:red;
+            }
+        }
+
+        .settings-container{
+            position:fixed;
+            top:1rem;
+            left:1rem;
+            width:300px;
+            box-shadow:0 2px 3px rgba(0,0,0,0.3);
+        }
+        .settings-container h4{
+            background-color:darkslategrey;
+            color:white;
+            margin:0;
+            padding:0.5rem;
+        }
+        .settings-container h4 .btn-minimise{
+            float:right;
+            cursor:pointer;
+            display:inline-block;
+            width:1rem;
+            text-align:center;
+        }
+        .settings-container .settings{
+            padding:0.5rem;
+            background-color:white;
+        }
+        .settings-container .settings p{
+            margin:0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="settings-container">
+            <h4>Settings<span class="btn-minimise" id="btn-minimise-settings"> - </span></h4>
+            <div class="settings">
+                <p>
+                    <select id="transparency-select"></select>
+                </p>
+                <p>
+                    <div hidden>
+                        <input type="checkbox" id="toggle-disco" /><label for="toggle-disco">Disco Mode</label>
+                    </div>
+                </p>
+                <p>
+                    <div>
+                        <input id="dark-color" type="color" value="#000000" /> <label for="dark-color">Dark Color</label>
+                    </div>
+                </p>
+                <p>
+                    <div>
+                        <input id="light-color" type="color" value="#ffffff" /> <label for="light-color">Light Color</label><br />
+                    </div>
+                </p>
+                <p>
+                    <input id="file-input" type="file" />
+                </p>
+                <p>
+                    <button id="generate-img" disabled title="In order to generate, you must select an image.">Generate</button><br />
+                </p>                
+            </div>
+        </div>
+    </main>
+
+    <script src="Duotone.js"></script>
+    <script>
+        // Handy helper function
+        String.prototype.hexToRGBArray = function () {
+            var value = this.match(/[A-Za-z0-9]{2}/g);
+            return value.map(function (v) { return parseInt(v, 16) });
+        };
+
+        // Get all of the necessary elements from the page
+        var transparencySelect = document.getElementById("transparency-select");
+        var generateImgBtn = document.getElementById("generate-img");
+        var darkColorInput = document.getElementById("dark-color");
+        var lightColorInput = document.getElementById("light-color");
+        var fileInput = document.getElementById("file-input");
+        var discoToggle = document.getElementById("toggle-disco");
+        var minimiseSettingsButton = document.getElementById("btn-minimise-settings");
+
+        minimiseSettingsButton.addEventListener("click", function () {
+            var settingsContainer = this.parentNode.parentNode.querySelector(".settings");
+            settingsContainer.hidden = !settingsContainer.hidden;
+        })
+
+        // Populate the transparency options with the available options
+        var transparencyOptions = Object.keys(duotoneGen.transparencyOptions);
+        for (var i = 0; i < transparencyOptions.length; i++) {
+            var option = document.createElement("option");
+            option.textContent = transparencyOptions[i];
+            option.value = duotoneGen.transparencyOptions[transparencyOptions[i]];
+            transparencySelect.appendChild(option);
+        };
+
+        transparencySelect.addEventListener("change", function (e) {
+            duotoneGen.setTransparency(e.target.value);
+
+            switch (parseInt(e.target.value)) {
+                case duotoneGen.transparencyOptions.DarkIsTransparent:
+                    darkColorInput.parentNode.hidden = true;
+                    lightColorInput.parentNode.hidden = false;
+                    discoToggle.parentNode.hidden = false;
+                    break;
+                case duotoneGen.transparencyOptions.LightIsTransparent:
+                    darkColorInput.parentNode.hidden = false;
+                    lightColorInput.parentNode.hidden = true;
+                    discoToggle.parentNode.hidden = false;
+                    break;
+                default:
+                    darkColorInput.parentNode.hidden = false;
+                    lightColorInput.parentNode.hidden = false;
+                    discoToggle.parentNode.hidden = true;
+                    break;
+            }
+
+        })
+
+        darkColorInput.addEventListener("change", function (e) {
+            duotoneGen.setColor(duotoneGen.colorType.Dark, e.target.value.hexToRGBArray());
+        });
+
+        lightColorInput.addEventListener("change", function (e) {
+            duotoneGen.setColor(duotoneGen.colorType.Light, e.target.value.hexToRGBArray());
+        });
+
+        // On file input change, try and load the file as an img
+        var img;
+        fileInput.addEventListener("change", function (e) {
+            generateImgBtn.disabled = true;
+            generateImgBtn.title = "Waiting for image to load"
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(e.target.files[0]);
+            fileReader.onload = function (e) {
+                img = new Image();
+                img.onload = function () {
+                    generateImgBtn.disabled = false;
+                    generateImgBtn.title = "";
+                }
+                img.src = fileReader.result;
+            }
+        });
+
+        generateImgBtn.addEventListener("click", function () {
+            duotoneGen.generate(img).then(function (canvas) {
+                if (discoToggle.value) {
+                    canvas.classList.add("disco");
+                }
+                else {
+                    canvas.classList.remove("disco");
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
