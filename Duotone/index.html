@@ -51,7 +51,6 @@
         .settings-container h4 .btn-minimise{
             float:right;
             cursor:pointer;
-            display:inline-block;
             width:1rem;
             text-align:center;
         }
@@ -66,7 +65,7 @@
 </head>
 <body>
     <main>
-        <div class="settings-container">
+        <div class="settings-container" id="settings-container" draggable="true">
             <h4>Settings<span class="btn-minimise" id="btn-minimise-settings"> - </span></h4>
             <div class="settings">
                 <p>
@@ -185,6 +184,39 @@
                     canvas.classList.remove("disco");
                 }
             });
+        });
+
+        var diffCoords = {
+            x: 0,
+            y: 0
+        }
+        var settingsContainer = document.getElementById("settings-container");
+        settingsContainer.addEventListener("drag", function(e){
+            if(e.clientX == 0 && e.clientY == 0)
+                return;
+
+            if(!e.dataTransfer.hasOwnProperty("dragCoords")){
+                e.dataTransfer.dragCoords = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
+                return;
+            }
+
+            diffCoords.x += (e.clientX - e.dataTransfer.dragCoords.x);
+            diffCoords.y += (e.clientY - e.dataTransfer.dragCoords.y);
+
+            e.dataTransfer.dragCoords = {
+                x: e.clientX,
+                y: e.clientY
+            };
+
+            settingsContainer.style.transform = `translate(${diffCoords.x}px, ${diffCoords.y}px)`;
+        });
+
+        settingsContainer.addEventListener("dragstart", function(e){
+            // Get rid of the ghost image
+            e.dataTransfer.setDragImage(document.createElement("img"), 0, 0);
         });
 
     </script>
