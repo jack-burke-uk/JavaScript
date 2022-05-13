@@ -1,0 +1,151 @@
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    background-color:#e5fffd;
+    padding-bottom: 5rem;
+}
+
+header{
+    font-family: 'Courier New', Courier, monospace;
+    background-color:#ef767a;
+    color:white;
+    text-align: right;
+    font-size: 0;
+    height:320px;
+    position:relative;
+}
+header:before{
+    content:"";
+    display:inline-block;
+    width:0;
+    height:100%;
+    vertical-align: middle;
+}
+header:after{
+    content:"";
+    position: absolute;
+    background: linear-gradient(0deg, #e5fffd, transparent);
+    bottom:0;
+    left:0;
+    right:0;
+    height:5rem;
+}
+header .header-content{
+    font-size: 1rem;
+    display:inline-block;
+    text-align: left;
+    vertical-align: middle;
+    padding-right:5rem;
+}
+header h1{
+    margin-bottom:0;
+}
+
+main{
+    width:100%;
+    max-width: 960px;
+    margin:0 auto;
+}
+
+.project-window-container{
+    display:inline-block;
+    width:50%;
+    box-sizing: border-box;
+    text-align: center;
+    margin:2rem 0;
+}
+.project-window{
+    display:inline-block;
+    position:relative;
+    overflow: hidden;
+    height:320px;
+    width:320px;
+    background-color:white;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.3);
+    cursor: pointer;
+    background-image: var(--bgUrl);
+    background-size: cover;
+    border-radius: 50%;
+}
+.project-window .project-image{
+    position:absolute;
+    top:0.5rem;
+    left:0.5rem;
+    bottom:0.5rem;
+    right:0.5rem;
+    border-radius: 50%;
+    background-size: cover;
+}
+
+.project-window .title{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    transform:translateY(-100%);
+    transition:transform 0.15s;
+    text-align: center;
+    background-color:#1c2826;
+    color:white;
+    padding:1rem;
+    font-weight: bold;
+}
+.project-window .description{
+    position:absolute;
+    bottom:0.5rem;
+    left:0.5rem;
+    right:0.5rem;
+    top:0.5rem;
+    transform:scale(0);
+    pointer-events: none;
+    transition:transform 0.2s ease-out;
+    margin:0;
+    background-color:rgba(0,0,0,0.75);
+    color:white;
+    padding:0.5rem;
+    border-radius: 50%;
+}
+.project-window .description:before{
+    content:"";
+    width:0;
+    height:100%;
+    display: inline-block;
+    vertical-align: middle;
+}
+.project-window .description .content{
+    display: inline-block;
+    vertical-align: middle;
+    padding:1rem;
+    box-sizing: border-box;
+}
+.project-window .description .description-header{
+    font-size: 1.2em;
+    display: block;
+    padding-bottom:0.5rem;
+}
+
+.project-window:hover .title,
+.project-window:hover .description{
+    transform:none;
+    pointer-events: all;
+}
+
+.project-window:hover .project-image{
+    filter: blur(1px);
+}
+
+.common-background{
+    background:linear-gradient(0deg, #159957, #155799);
+    background-attachment: fixed;
+}
+
+
+
+
+@supports (-webkit-background-clip: text) {
+    main h2 {
+        background: linear-gradient(0deg, #159957, #155799);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+  }

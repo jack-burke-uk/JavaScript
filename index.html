@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>GitHub: jack-burke-uk</title>
+    <link rel="stylesheet" href="./HomePage/Content/site.css" />
+    <script src="./HomePage/Scripts/vue.min.js"></script>
+    <script src="./HomePage/Scripts/Components/project-window.js"></script>
+</head>
+<body>
+    <header class="common-background">
+        <div class="header-content">
+            <h1>Jack Burke</h1>
+            <span>Web Developer</span>
+        </div>
+    </header>
+    <main id="app">
+        <h2>Projects</h2>
+        <div class="project-window-container" v-for="project in projects">
+            <project-window class="common-background" :project="project" @projectselected="handleProjectClicked"></project-window>
+        </div>
+    </main>
+    <footer></footer>
+    <script src="./HomePage/Scripts/index.js"></script>
+</body>
+</html>
