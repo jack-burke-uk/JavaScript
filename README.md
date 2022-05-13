@@ -14,3 +14,7 @@ Display video streams as a trail of images in a sort of polaroid style.
 
 Display a circular dial which shows how much of the total value is taken
 up by another value.
+
+## [Spirograph](https://jack-burke-uk.github.io/JavaScript/Spirograph)
+
+Generate a random spirograph-type image with up to 30 points.
