@@ -14,8 +14,10 @@
     </header>
     <main id="app">
         <h2>Projects</h2>
-        <div class="project-window-container" v-for="project in projects">
-            <project-window class="common-background" :project="project" @projectselected="handleProjectClicked"></project-window>
+        <div class="projects">
+            <div class="project-window-container" v-for="project in projects">
+                <project-window class="common-background" :project="project" @projectselected="handleProjectClicked"></project-window>
+            </div>
         </div>
     </main>
     <footer></footer>

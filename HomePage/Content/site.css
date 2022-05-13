@@ -47,12 +47,18 @@ main{
     margin:0 auto;
 }
 
+main .projects{
+    text-align: center;
+}
+
 .project-window-container{
     display:inline-block;
     width:50%;
     box-sizing: border-box;
     text-align: center;
     margin:2rem 0;
+    min-width: 350px;
+    max-width: 100%;
 }
 .project-window{
     display:inline-block;
