@@ -6,7 +6,7 @@ Collection of JS tests and pages
 
 Allows users to edit their images into a two-tone picture.
 
-## [Polaroid](https://jack-burke-uk.github.io/JavaScript/JavaScript/Polaroid/)
+## [Polaroid](https://jack-burke-uk.github.io/JavaScript/Polaroid/)
 
 Display video streams as a trail of images in a sort of polaroid style.
 
