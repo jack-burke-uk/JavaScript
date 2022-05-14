@@ -47,6 +47,10 @@ main{
     margin:0 auto;
 }
 
+main.is-loading{
+    background-color:red;
+}
+
 main .projects{
     text-align: center;
 }
@@ -144,9 +148,36 @@ main .projects{
     background:linear-gradient(0deg, #159957, #155799);
     background-attachment: fixed;
 }
-
-
-
+[v-cloak]{
+    display: none;
+}
+@keyframes spin{
+    from{
+        transform: rotateZ(0deg);
+    }
+    to{
+        transform: rotateZ(360deg);
+    }
+}
+.loading-spinner{
+    display:inline-block;
+    width:1em;
+    height:1em;
+    border-radius: 50%;
+    border:4px solid transparent;
+    border-left-color: #155799;
+    border-right-color: #155799;
+    animation:spin 1s linear infinite;
+}
+.loading-container{
+    font-size: 3rem;
+    text-align: center;
+    padding-top:3rem;
+}
+.loading-container p{
+    font-size: 1.25rem;
+    color:#155799;
+}
 
 @supports (-webkit-background-clip: text) {
     main h2 {

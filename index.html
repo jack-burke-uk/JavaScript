@@ -14,10 +14,16 @@
         </div>
     </header>
     <main id="app">
-        <h2>Projects</h2>
-        <div class="projects">
-            <div class="project-window-container" v-for="project in projects">
-                <project-window class="common-background" :project="project" @projectselected="handleProjectClicked"></project-window>
+        <div class="loading-container" v-if="isLoading">
+            <div class="loading-spinner"></div>
+            <p>Loading Projects...</p>
+        </div>
+        <div v-cloak v-else>
+            <h2>Projects</h2>
+            <div class="projects">
+                <div class="project-window-container" v-for="project in projects">
+                    <project-window class="common-background" :project="project" @projectselected="handleProjectClicked"></project-window>
+                </div>
             </div>
         </div>
     </main>
