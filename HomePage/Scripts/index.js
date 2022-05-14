@@ -7,7 +7,7 @@ vm = new Vue({
     created(){
         var self = this;
         var req = new XMLHttpRequest();
-        req.open("GET", "./HomePage/Content/Projects.json");
+        req.open("GET", "./HomePage/Content/projects.json");
         req.addEventListener("readystatechange", function(){
             if(req.readyState == 4 && req.status == 200){
                 self.projects = JSON.parse(req.responseText).projects;
